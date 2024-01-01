@@ -75,7 +75,7 @@ interface twitterSidebarButton{
 
 export const Sidebar = () => {
   return (
-    <div className=' col-span-3 pt-1 '>
+    <div className=' col-span-3 pt-1 ml-16'>
         <div className ='text-3xl h-fit hover:bg-[#191919] rounded-full p-2.5 cursor-pointer transition-all w-fit ml-3 '>
         <FaXTwitter />
 
