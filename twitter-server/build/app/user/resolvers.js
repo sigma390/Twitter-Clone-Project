@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
 const axios_1 = __importDefault(require("axios"));
+const import_1 = require("../../clients/db/import");
 const queries = {
     verifyGoogleToken: (parent, { token }) => __awaiter(void 0, void 0, void 0, function* () {
         const googleToken = token; //google token
@@ -24,8 +25,22 @@ const queries = {
         const { data } = yield axios_1.default.get(googleBaseUrl.toString(), {
             responseType: 'json'
         });
-        console.log(data);
-        return "ok";
+        //===> check for user <====
+        const user = yield import_1.prismaClient.user.findUnique({
+            where: { email: data.email }
+        });
+        //create new user
+        if (!user) {
+            yield import_1.prismaClient.user.create({
+                data: {
+                    email: data.email,
+                    firstName: data.given_name,
+                    lastName: data.family_name,
+                    profileImageURL: data.picture
+                }
+            });
+        }
+        // generate token for above user
     }),
 };
 exports.resolvers = { queries };
