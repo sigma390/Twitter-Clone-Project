@@ -3,19 +3,20 @@ import { expressMiddleware } from '@apollo/server/express4';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
-
+import { User } from './user';
 export async function initServer() {
     const graphqlServer = new ApolloServer({
-        typeDefs:`type Query{
-            sayHello:String,
-            sayHellotome(name:String):String
+        typeDefs:`
+            ${User.types}
+        
+        type Query{
+            ${User.queries}
 
         
         }`,
         resolvers:{
             Query:{
-                sayHello:()=>`hello from graphql server`,
-                sayHellotome:(parent:any,{name}:{name:String} )=>`hey ${name}`
+                ...User.resolvers.queries,
             }
         },
       });
